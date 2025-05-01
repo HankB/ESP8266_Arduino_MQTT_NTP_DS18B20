@@ -1,5 +1,8 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <ESP8266WiFi.h>
+
+#include "secrets.h"
 
 // Following code slavishly copied from 
 // https://randomnerdtutorials.com/guide-for-ds18b20-temperature-sensor-with-arduino/
@@ -23,6 +26,29 @@ void setup() {
   // Start up the library
   sensors.begin();
 /**********************************************************/
+
+/* Following slavishly copied from
+   https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/readme.html
+// This code requires that you provide "secrets.h" with something like
+
+const char* ssid="myssid";
+const char* password="my_password"
+
+   which I suggest you do *not* check into Github etc.
+*/
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+  WiFi.begin(ssid, password);
+
+  Serial.print("Connecting");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println();
+
+  Serial.print("Connected, IP address: ");
+  Serial.println(WiFi.localIP());
 
 }
 
