@@ -63,7 +63,7 @@ Needed to install the library:
 arduino-cli lib install ntpclient
 ```
 
-## 2025-05-01 NTP
+## 2025-05-01 MQTT
 
 * <https://www.emqx.com/en/blog/esp8266-connects-to-the-public-mqtt-broker>
 
