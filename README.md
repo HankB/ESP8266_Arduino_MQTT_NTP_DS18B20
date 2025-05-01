@@ -53,17 +53,29 @@ Slavishly follow code found at <https://randomnerdtutorials.com/guide-for-ds18b2
 
 Guide found at <https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/readme.html>, Wifi associates.
 
+## 2025-05-01 NTP
+
+* <https://randomnerdtutorials.com/esp8266-nodemcu-date-time-ntp-client-server-arduino/>
+
+Needed to install the library:
+
+```text
+arduino-cli lib install ntpclient
+```
+
 ## Status
 
+* 2025-05-01 NTP Client gets time from server.
 * 2025-05-01 WiFi associates, gets IP addr.
 * 2025-05-01 Reading temperature from a single sensor.
 * 2025-05-01 First working build using the Arduino IDE.
 
 ## Next
 
-* <~~>2025-05-01 add support for DS18B20~~
+* ~~2025-05-01 add support for DS18B20~~
 * ~~2025-05-01 Add WiFi.~~
-* 2025-05-01 NTP Support.
+* ~~2025-05-01 NTP Support.~~
+* 2025-05-01 MQTT client support.
 
 ## Hardware
 
@@ -83,3 +95,23 @@ Connections are as follows:
 ## Errata
 
 * Serial baud rate. The bootloader starts at 74880 and the Arduino IDE supports this. The `minicom` program seems not to (and defaults to 115200). Choose a baud rate accordingly.
+* At some point after initially adding NTP suypport, the Fahrenheit (but not Celsuis)output seemed corrupted. That went away when output was reformatted.
+
+```text
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.31 - Fahrenheit temperature: 70.36
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.25 - Fahrenheit temperature: -196.60
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
+Celsius temperature: 21.25 - Fahrenheit temperature: -196.60
+```
