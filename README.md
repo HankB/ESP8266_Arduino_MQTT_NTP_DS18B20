@@ -61,7 +61,7 @@ Guide found at <https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/rea
 
 ## Next
 
-* <s>2025-05-01 add support for DS18B20<>/s>
+* <~~>2025-05-01 add support for DS18B20~~
 * ~~2025-05-01 Add WiFi.~~
 * 2025-05-01 NTP Support.
 
