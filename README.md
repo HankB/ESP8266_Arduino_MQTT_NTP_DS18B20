@@ -63,8 +63,13 @@ Needed to install the library:
 arduino-cli lib install ntpclient
 ```
 
+## 2025-05-01 NTP
+
+* <https://www.emqx.com/en/blog/esp8266-connects-to-the-public-mqtt-broker>
+
 ## Status
 
+* 2025-05-01 MQTT client connects and publishes, butr not as often as expected.
 * 2025-05-01 NTP Client gets time from server.
 * 2025-05-01 WiFi associates, gets IP addr.
 * 2025-05-01 Reading temperature from a single sensor.
@@ -75,7 +80,8 @@ arduino-cli lib install ntpclient
 * ~~2025-05-01 add support for DS18B20~~
 * ~~2025-05-01 Add WiFi.~~
 * ~~2025-05-01 NTP Support.~~
-* 2025-05-01 MQTT client support.
+* ~~2025-05-01 MQTT client support.~~
+* 2025-01-05 massive cleanup!
 
 ## Hardware
 
@@ -115,3 +121,5 @@ Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
 Celsius temperature: 21.25 - Fahrenheit temperature: 70.25
 Celsius temperature: 21.25 - Fahrenheit temperature: -196.60
 ```
+
+* First cut of MQTT client publishes only about every 20s, vs. executing the function ever second. Will address later.

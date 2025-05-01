@@ -3,6 +3,7 @@
 #include <ESP8266WiFi.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
+#include <PubSubClient.h>
 
 #include "secrets.h"
 
@@ -24,13 +25,37 @@ DallasTemperature sensors(&oneWire);
   Following code slavishly copied from 
   https://randomnerdtutorials.com/esp8266-nodemcu-date-time-ntp-client-server-arduino/
 */
-
 /*========================================================*/
 // Define NTP Client to get time
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
 /*========================================================*/
 
+
+/*
+  Following code slavishly copied from 
+  https://www.emqx.com/en/blog/esp8266-connects-to-the-public-mqtt-broker
+*/
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+WiFiClient espClient;
+PubSubClient mqtt_client(espClient);
+void connectToMQTTBroker(void) {
+  while (!mqtt_client.connected()) {
+      String client_id = "esp8266-client-" + String(WiFi.macAddress());
+      Serial.printf("Connecting to MQTT Broker as %s.....\n", client_id.c_str());
+      if (mqtt_client.connect(client_id.c_str(), "", "")) {
+          Serial.println("Connected to MQTT broker");
+          // mqtt_client.subscribe(mqtt_topic);          // Publish message upon successful connection
+          mqtt_client.publish("ESP8266/test", "Hi MQTT I'm ESP8266 ^^");
+      } else {
+          Serial.print("Failed to connect to MQTT broker, rc=");
+          Serial.print(mqtt_client.state());
+          Serial.println(" try again in 5 seconds");
+          delay(5000);
+      }
+  }
+}
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 void setup() {
   // Configure Serial for debugging
@@ -80,6 +105,8 @@ const char* password="my_password"
     delay(500);
   }
 
+  mqtt_client.setServer(mqtt_broker, 1883);
+  //mqtt_client.setCallback(mqttCallback);
 }
 
 void loop() {
@@ -94,6 +121,7 @@ void loop() {
   time_t now = timeClient.getEpochTime();
   Serial.printf("Temperature at %u : %f.2 F, %f.2 C\n\r",
       now, sensors.getTempFByIndex(0), sensors.getTempCByIndex(0));
+  connectToMQTTBroker();
   delay(1000);
 /**********************************************************/
 
