@@ -45,11 +45,13 @@ minicom --device /dev/ttyUSB0 # monitor
 
 ## Status
 
+* 2025-05-01 Reading temperature from a single sensor.
 * 2025-05-01 First working build using the Arduino IDE.
 
 ## Next
 
-* 2025-05-01 add support for DS18B20
+* ~~2025-05-01 add support for DS18B20~~
+* 2025-05-01 Add WiFi.
 
 ## Hardware
 
