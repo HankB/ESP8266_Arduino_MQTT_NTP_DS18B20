@@ -40,7 +40,7 @@ arduino-ide_2.3.6_Linux_64bit.AppImage ESP8266_Arduino_MQTT_NTP_DS18B20.ino
 ## 2025-05-01 retry CLI
 
 ```text
-arduino-cli compile --fqbn esp8266:esp8266:d1_mini_clone ./ # build
+arduino-cli compile --fqbn esp8266:esp8266:d1_mini_clone  --warnings all ./ # build
 arduino-cli upload -p /dev/ttyUSB0 --fqbn esp8266:esp8266:d1_mini_clone ./ # flash
 minicom --device /dev/ttyUSB0 # monitor
 ```
@@ -69,6 +69,7 @@ arduino-cli lib install ntpclient
 
 ## Status
 
+* 2025-05-02 Publish desired format for payload.
 * 2025-05-02 Make all serial debugging output conditional.
 * 2025-05-01 MQTT client connects and publishes, butr not as often as expected.
 * 2025-05-01 NTP Client gets time from server.
