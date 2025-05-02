@@ -4,6 +4,21 @@
 
 It has been a struggle getting the DSD18B20 temperature sensor working with the ESP8266-RTOS-SDK tool chain so I am regressing to the Arduino tool chain and libraries (which use the ESP8266-RTOS-SDK under the covers.) My intent is too use VS Code for editing and the `arduino-cli` to build and flash. (Development is on Linux and using the `bash` shell.)
 
+## Status
+
+Done!
+
+Unless I need to add something or someone files an issue.
+
+* 2025-05-02 Added DS18B20 ID to payload.
+* 2025-05-02 Publish desired format for payload.
+* 2025-05-02 Make all serial debugging output conditional.
+* 2025-05-01 MQTT client connects and publishes, butr not as often as expected.
+* 2025-05-01 NTP Client gets time from server.
+* 2025-05-01 WiFi associates, gets IP addr.
+* 2025-05-01 Reading temperature from a single sensor.
+* 2025-05-01 First working build using the Arduino IDE.
+
 ## 2025-05-01 Build starting point
 
 * <https://gist.github.com/adi-g15/de41e96079a5b63045e86dc7c8c5c87e> 
@@ -67,23 +82,14 @@ arduino-cli lib install ntpclient
 
 * <https://www.emqx.com/en/blog/esp8266-connects-to-the-public-mqtt-broker>
 
-## Status
-
-* 2025-05-02 Publish desired format for payload.
-* 2025-05-02 Make all serial debugging output conditional.
-* 2025-05-01 MQTT client connects and publishes, butr not as often as expected.
-* 2025-05-01 NTP Client gets time from server.
-* 2025-05-01 WiFi associates, gets IP addr.
-* 2025-05-01 Reading temperature from a single sensor.
-* 2025-05-01 First working build using the Arduino IDE.
-
 ## Next
 
 * ~~2025-05-01 add support for DS18B20~~
 * ~~2025-05-01 Add WiFi.~~
 * ~~2025-05-01 NTP Support.~~
 * ~~2025-05-01 MQTT client support.~~
-* 2025-01-05 massive cleanup!
+* ~~2025-01-05 massive cleanup!~~
+* ~~2025-05-02 Add device ID to the payload.~~
 
 ## Hardware
 

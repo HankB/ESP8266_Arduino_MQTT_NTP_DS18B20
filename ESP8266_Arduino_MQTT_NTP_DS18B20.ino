@@ -70,6 +70,21 @@ int connectToMQTTBroker_and_publish(const char *topic, const char *payload)
 }
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
+// function to print a device address
+void format_ds18b20_address(DeviceAddress deviceAddress, char *buf, size_t len)
+{
+  buf[0] = 0;
+  for (int i = 0; i < 8; i++)
+  {
+    size_t used = strlen(buf);
+    snprintf(buf + used, len - used, "%2.2x", deviceAddress[i]);
+  }
+}
+
+#define id_len 20
+char id_buf[id_len];
+DeviceAddress ds18b20_addr; // We'll use this variable to store a found device address
+
 void setup()
 {
   // Configure Serial for debugging
@@ -80,16 +95,26 @@ void setup()
   sensors.begin();
   /**********************************************************/
 
+  // capture and format device ID
+  if (sensors.getAddress(ds18b20_addr, 0))
+  {
+    format_ds18b20_address(ds18b20_addr, id_buf, id_len);
+  }
+  else
+  {
+    strncpy(id_buf, "     ghost      ", id_len);
+  }
+
   /* Following slavishly copied from
-     https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/readme.html
-  // This code requires that you provide "secrets.h" with something like
+   https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/readme.html
+// This code requires that you provide "secrets.h" with something like
 
-  Define the following in secrets.h:
-  const char* ssid="myssid";
-  const char* password="my_password"
+Define the following in secrets.h:
+const char* ssid="myssid";
+const char* password="my_password"
 
-     which I suggest you do *not* check into Github etc.
-  */
+   which I suggest you do *not* check into Github etc.
+*/
   /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
   WiFi.begin(ssid, password);
 
@@ -147,11 +172,14 @@ void loop()
 
   time_t now = timeClient.getEpochTime();
   float temperature_f = sensors.getTempFByIndex(0);
+
+  // format payload
+  // {"t":1746216484, "temp":70.93, "device":"DS18B20", "DS18B20_ID":"28-3c01b607e46b"}
   sprintf(payload,
-          "{\"t\":%lld, \"temp\":%.2f, \"device\":\"DS18B20\"}",
-          now, temperature_f);
+          "{\"t\":%lld, \"temp\":%.2f, \"device\":\"DS18B20\", \"DS18B20_ID\":\"%s\"}",
+          now, temperature_f, id_buf);
   if (do_serial)
     Serial.println(payload);
   connectToMQTTBroker_and_publish(my_topic, payload);
-  delay((60*1000)-(millis()-loop_start_millis)); // could measure time to execute loop.
+  delay((60 * 1000) - (millis() - loop_start_millis)); // could measure time to execute loop.
 }
