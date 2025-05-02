@@ -31,7 +31,7 @@ hbarta@olive:~/Programming/Arduino/ESP8266_Arduino_MQTT_NTP_DS18B20$
 
 Start with the IDE (flatpak) and choose the board `LOLIN(WEMOS) D1 Mini` and build successfully. There is a fair bit of text output to the console (since I launched the IDE from the command line.) and apparently the board ID is `esp8266:esp8266:d1_mini_clone`
 
-*Note: It may be necessary to install required libraries. This is not my first Arduino/ESP8266 project so the libraries were already installed.*
+*Note: It may be necessary to install required libraries. This is not my first Arduino/ESP8266 project so some libraries were already installed.*
 
 ```text
 arduino-ide_2.3.6_Linux_64bit.AppImage ESP8266_Arduino_MQTT_NTP_DS18B20.ino
@@ -69,6 +69,7 @@ arduino-cli lib install ntpclient
 
 ## Status
 
+* 2025-05-02 Make all serial debugging output conditional.
 * 2025-05-01 MQTT client connects and publishes, butr not as often as expected.
 * 2025-05-01 NTP Client gets time from server.
 * 2025-05-01 WiFi associates, gets IP addr.
@@ -123,3 +124,4 @@ Celsius temperature: 21.25 - Fahrenheit temperature: -196.60
 ```
 
 * First cut of MQTT client publishes only about every 20s, vs. executing the function ever second. Will address later.
+* I notice that the on board LED flashes when the sensor is read. My ESP8266-RTOS-SDK implementation incluyded code to flash the on board LED. I suppose this may be why it did not work well. Doh!

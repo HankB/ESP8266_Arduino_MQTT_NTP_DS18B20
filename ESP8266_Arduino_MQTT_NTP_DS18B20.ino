@@ -31,6 +31,7 @@ WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
 /*========================================================*/
 
+static bool do_serial = false;
 
 /*
   Following code slavishly copied from 
@@ -42,16 +43,18 @@ PubSubClient mqtt_client(espClient);
 void connectToMQTTBroker(void) {
   while (!mqtt_client.connected()) {
       String client_id = "esp8266-client-" + String(WiFi.macAddress());
-      Serial.printf("Connecting to MQTT Broker as %s.....\n", client_id.c_str());
+      if( do_serial) Serial.printf("Connecting to MQTT Broker as %s.....\n", client_id.c_str());
       if (mqtt_client.connect(client_id.c_str(), "", "")) {
           Serial.println("Connected to MQTT broker");
           // mqtt_client.subscribe(mqtt_topic);          // Publish message upon successful connection
           mqtt_client.publish("ESP8266/test", "Hi MQTT I'm ESP8266 ^^");
       } else {
+        if( do_serial)  {
           Serial.print("Failed to connect to MQTT broker, rc=");
           Serial.print(mqtt_client.state());
           Serial.println(" try again in 5 seconds");
-          delay(5000);
+        }
+        delay(5000);
       }
   }
 }
@@ -59,7 +62,7 @@ void connectToMQTTBroker(void) {
 
 void setup() {
   // Configure Serial for debugging
-  Serial.begin(115200);
+  if( do_serial) Serial.begin(115200);
 /**********************************************************/
   // Start up the library
   sensors.begin();
@@ -77,17 +80,18 @@ const char* password="my_password"
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
   WiFi.begin(ssid, password);
 
-  Serial.print("Connecting");
+  if( do_serial) Serial.print("Connecting");
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
-    Serial.print(".");
+    if( do_serial) Serial.print(".");
   }
-  Serial.println();
+  if( do_serial) {
+    Serial.println();
 
-  Serial.print("Connected, IP address: ");
-  Serial.println(WiFi.localIP());
-
+    Serial.print("Connected, IP address: ");
+    Serial.println(WiFi.localIP());
+  }
   /*========================================================*/
   // Initialize a NTPClient to get time
   timeClient.begin();
@@ -101,7 +105,7 @@ const char* password="my_password"
   {
     timeClient.update();
     now = timeClient.getEpochTime();
-    Serial.printf("NTP time: %u\n\r", now);
+    if( do_serial) Serial.printf("NTP time: %u\n\r", now);
     delay(500);
   }
 
@@ -119,7 +123,7 @@ void loop() {
   // Why "byIndex"? You can have more than one IC on the same bus. 0 refers to the first IC on the wire
   //Serial.print(sensors.getTempCByIndex(0)); 
   time_t now = timeClient.getEpochTime();
-  Serial.printf("Temperature at %u : %f.2 F, %f.2 C\n\r",
+  if( do_serial) Serial.printf("Temperature at %u : %f.2 F, %f.2 C\n\r",
       now, sensors.getTempFByIndex(0), sensors.getTempCByIndex(0));
   connectToMQTTBroker();
   delay(1000);
