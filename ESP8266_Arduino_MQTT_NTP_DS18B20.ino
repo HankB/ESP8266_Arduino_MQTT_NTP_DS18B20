@@ -12,7 +12,9 @@
 // https://randomnerdtutorials.com/guide-for-ds18b20-temperature-sensor-with-arduino/
 
 /**********************************************************/
-// Data wire is conntec to the Arduino digital pin 4
+// Data wire is connected to the Arduino digital pin 4
+// Note that D4 (pin 2) is used to drive the builtin LED so
+// DON'T MESS WITH THE BUILTIN LED
 #define ONE_WIRE_BUS 2
 
 // Setup a oneWire instance to communicate with any OneWire devices
@@ -82,6 +84,7 @@ void setup()
      https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/readme.html
   // This code requires that you provide "secrets.h" with something like
 
+  Define the following in secrets.h:
   const char* ssid="myssid";
   const char* password="my_password"
 
@@ -101,7 +104,6 @@ void setup()
   if (do_serial)
   {
     Serial.println();
-
     Serial.print("Connected, IP address: ");
     Serial.println(WiFi.localIP());
   }
@@ -123,8 +125,8 @@ void setup()
     delay(500);
   }
 
+  // define mqtt_broker in secrets.h
   mqtt_client.setServer(mqtt_broker, 1883);
-  // mqtt_client.setCallback(mqttCallback);
 }
 
 // buffer to build MQTT payload
@@ -135,41 +137,21 @@ char float_buf[float_len];
 
 void loop()
 {
+  unsigned long loop_start_millis = millis();
   // TODO: add code to periodically update NTP time - once/hour?
+
   /**********************************************************/
   // Call sensors.requestTemperatures() to issue a global temperature and Requests to all devices on the bus
   sensors.requestTemperatures();
+  /**********************************************************/
 
-  // Serial.print("Celsius temperature: ");
-  //  Why "byIndex"? You can have more than one IC on the same bus. 0 refers to the first IC on the wire
-  // Serial.print(sensors.getTempCByIndex(0));
   time_t now = timeClient.getEpochTime();
   float temperature_f = sensors.getTempFByIndex(0);
-  // dtostrf( float val, minimum field width, digits after decimal, buffer );
-  //dtostrf( temperature_f, 5, 2, float_buf );
-  sprintf(payload, 
-    "{\"t\":%lld, \"temp\":%.2f, \"device\":\"DS18B20\"}",
-    now, temperature_f);
-  Serial.println(payload);
-/*
-  snprintf(payload, payload_len, 
-    "{ \"t\":%ld, \"temp\": %s, \"device\":\"DS18B20\" }",
-    now, float_buf);
-
+  sprintf(payload,
+          "{\"t\":%lld, \"temp\":%.2f, \"device\":\"DS18B20\"}",
+          now, temperature_f);
   if (do_serial)
-    Serial.printf("Temperature at %u (%d): %.2f F, '%s'\n\r",
-                  now, now, temperature_f, float_buf);\
-
-    // build JSON formatted payload
-    // { "t":1746193325, "temp": 70.1, "device":"DS18B20" }
-    snprintf(payload, payload_len, 
-      "{ \"t\":%ld, \"temp\": %s, \"device\":\"DS18B20\" }",
-      now, float_buf);
-    if (do_serial)
-      Serial.println(payload);
-*/
-  
+    Serial.println(payload);
   connectToMQTTBroker_and_publish(my_topic, payload);
-  delay(10000);
-  /**********************************************************/
+  delay((60*1000)-(millis()-loop_start_millis)); // could measure time to execute loop.
 }
