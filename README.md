@@ -132,3 +132,4 @@ Celsius temperature: 21.25 - Fahrenheit temperature: -196.60
 
 * First cut of MQTT client publishes only about every 20s, vs. executing the function ever second. Will address later.
 * I notice that the on board LED flashes when the sensor is read. My ESP8266-RTOS-SDK implementation incluyded code to flash the on board LED. I suppose this may be why it did not work well. Doh!
+* See also <[https://github.com/HankB/ESP8266_Arduino_MQTT_NTP_DS18B20](https://github.com/HankB/ESP8266_RTOS_DS18B20_publish)> for a variant of this project using the ESP-RTOS-SDK libraries and tool chain. The motivation for both variants is that an ESP32/Arduino variant <https://github.com/HankB/ESP32-Arduino-DS18B20_MQTT> runs for a few days and then stops. In addition I have several ESP8266s that I want to deploy using these sensors. I will test these for run time to see if either has the issue.
